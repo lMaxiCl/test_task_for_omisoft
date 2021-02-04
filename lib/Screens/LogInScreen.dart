@@ -3,12 +3,11 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import 'package:test_task_for_omisoft/AppData.dart';
+import 'package:test_task_for_omisoft/ViewModel.dart';
 
 class LogInScreen extends StatelessWidget {
   static const String id = 'LOG_IN_SCREEN';
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -74,7 +73,7 @@ class LogInScreen extends StatelessWidget {
               child: TextField(
                 decoration: InputDecoration(hintText: 'Поштова скринька'),
                 keyboardType: TextInputType.emailAddress,
-                controller: _emailController,
+                controller: Provider.of<ViewModel>(context).emailController,
               ),
             ),
             Padding(
@@ -83,11 +82,13 @@ class LogInScreen extends StatelessWidget {
                 decoration: InputDecoration(hintText: 'Пароль'),
                 keyboardType: TextInputType.text,
                 obscureText: true,
-                controller: _passwordController,
+                controller: Provider.of<ViewModel>(context).passwordController,
               ),
             ),
             TextButton(
-              onPressed: () => Fluttertoast.showToast(msg: 'Правда забули?'),
+              onPressed: () {
+                Fluttertoast.showToast(msg: 'Правда забули?');
+              },
               child: Text(
                 'Забули пароль?',
                 style:
@@ -107,10 +108,7 @@ class LogInScreen extends StatelessWidget {
                     ),
                     child: TextButton(
                       onPressed: () {
-                        Provider.of<AppData>(context, listen: false).getToken(
-                            _emailController.text, _passwordController.text);
-                        _emailController.clear();
-                        _passwordController.clear();
+                        Provider.of<ViewModel>(context, listen: false).logIn();
                       },
                       child: Text(
                         'Увійти',
